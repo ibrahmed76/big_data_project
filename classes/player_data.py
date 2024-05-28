@@ -1,26 +1,73 @@
-import redis
+from cassandra.cluster import Cluster
+import uuid
 
-class Player:
-    def __init__(self, player_id=None, username=None, email=None, profile_picture=None, achievements=None, inventory=None, friend_list=None):
-        self.redis = redis_client
-        self.player_id = player_id
-        self.username = username
-        self.email = email
-        self.profile_picture = profile_picture
-        self.achievements = achievements or []
-        self.inventory = inventory or []
-        self.friend_list = friend_list or []
+class PlayerData:
+    def __init__(self, keyspace='game'):
+        self.cluster = Cluster()
+        self.session = self.cluster.connect()
+        self.keyspace = keyspace
+        self.session.execute(f"USE {self.keyspace};")
+    
+    def checkWorking(self, player_name):
+        query = """SELECT player_name
+                   FROM player_data
+                   WHERE player_name = %s
+                """
+        result = self.session.execute(query, (player_name,))
+        
+        # Check if the result contains any rows
+        if result:
+            # Fetch the first row from the result
+            row = result.one()
+            if row:
+                print(f'{player_name} added')
+            else:
+                print('error')
+        else:
+            print('error')
 
-    def save(self):
-        pass
+    def register(self, player_name, email, password, achievements, inventory, friend_list, profile_picture=None):
+        self.session.execute("""
+        INSERT INTO player_data (player_id, player_name, player_email, password, profile_picture, achievements, inventory, friend_list)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        """, (uuid.uuid4(), player_name, email, password, profile_picture, achievements, inventory, friend_list))
+        print(f"Player {player_name} added with email {email}")
+        self.checkWorking(player_name)
+    
+    def login(self, email, password):
+        query = """SELECT password
+                   FROM player_data
+                   WHERE player_email = %s
+                """
+        result = self.session.execute(query, (email,))
+    
+        if result:
+            row = result.one()
+            if row and row.password == password:
+                print('Authentication successful')
+                return True
+            else:
+                print('Authentication failed')
+                return False
+        else:
+            print('Authentication failed')
+            return False
 
-    def load(self):
-        pass
 
-    def delete(self):
-        pass
 
-# Usage example:
-redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
-player = Player(redis_client, username="player1", email="player1@example.com")
-player.save()
+# Example of how to use the PlayerDatabase class
+if __name__ == '__main__':
+    db = PlayerData()
+    
+    # test
+    player_name = 'JohnDoe'
+    email = 'john.doe@example.com'
+    password = 'securepassword'
+    achievements = ['First Blood', 'Sharp Shooter']
+    inventory = ['Sword', 'Shield']
+    friend_list = ['JaneDoe', 'BobSmith']
+
+    db.register(player_name, email, password, achievements, inventory, friend_list)
+    #test with wrong pass 
+    db.login(email,"ndnnd")
+    db.login(email,password)
