@@ -3,11 +3,11 @@ from cassandra.cluster import Cluster
 class CassandraSingleton:
     _instance = None
 
-    def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-            cls._instance.connect()
-        return cls._instance
+    def __new__(self, *args, **kwargs):
+        if self._instance is None:
+            self._instance = super().__new__(self)
+            self._instance.connect()
+        return self._instance
 
     def connect(self):
         self.cluster = Cluster(['127.0.0.1'])  
