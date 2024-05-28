@@ -12,9 +12,7 @@ class PlayerData:
                 """
         result = self._cassandra.execute_query(query, (player_name,))
         
-        # Check if the result contains any rows
         if result:
-            # Fetch the first row from the result
             row = result.one()
             if row:
                 print(f'{player_name} added')
