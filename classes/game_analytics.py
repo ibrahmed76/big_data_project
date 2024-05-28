@@ -1,5 +1,4 @@
 from cassandra_db import CassandraSingleton
-from cassandra.query import SimpleStatement
 
 class GameAnalytics:
     
