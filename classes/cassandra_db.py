@@ -10,14 +10,13 @@ class CassandraSingleton:
         return cls._instance
 
     def connect(self):
-        self.cluster = Cluster(['localhost'])  
+        self.cluster = Cluster(['127.0.0.1'])  
         self.session = self.cluster.connect('game')
 
     def execute_query(self, query):
         return self.session.execute(query)
     
     def insert_data(self, table : str, data : map) -> None:
-        # Construct the INSERT query dynamically based on the table and data
         query = f"INSERT INTO {table} ("
 
         columns = ", ".join(data.keys())

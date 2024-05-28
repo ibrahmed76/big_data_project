@@ -11,7 +11,7 @@ class RedisSingleton:
 
     def connect(self):
         self.redis_client = redis.Redis(host='localhost', port='6379', 
-                                              password='', decode_responses=True)
+                                        password='', decode_responses=True)
 
     def set(self, key, value):
         self.redis_client.set(key, value)

@@ -4,7 +4,7 @@ import json
 class PlayerStatistics:
         
     @staticmethod
-    def set_player_stat(self, player_id, stat_category, stat_name, value):
+    def set_player_stat(player_id, stat_category, stat_name, value):
         redis = RedisSingleton()
         key = f"player:{player_id}:stats"
         field = f"{stat_category}:{stat_name}"
@@ -12,7 +12,7 @@ class PlayerStatistics:
         return redis.set_with_field(key, field, value)
 
     @staticmethod
-    def get_player_stat(self, player_id, stat_category, stat_name):
+    def get_player_stat(player_id, stat_category, stat_name):
         redis = RedisSingleton()
         key = f"player:{player_id}:stats"
         field = f"{stat_category}:{stat_name}"
@@ -21,7 +21,7 @@ class PlayerStatistics:
         
 
     @staticmethod
-    def get_all_player_stats(self, player_id):
+    def get_all_player_stats(player_id):
         redis = RedisSingleton()
         key = f"player:{player_id}:stats"
         
