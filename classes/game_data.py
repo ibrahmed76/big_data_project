@@ -7,7 +7,7 @@ class GameData:
         self.game_type = game_type
         self.current_state = current_state
         self.world_layout_details = world_layout_details
-        self.cassandra = CassandraSingleton()
+        self._cassandra = CassandraSingleton()
 
     @staticmethod
     def insert_game(self):
