@@ -15,12 +15,3 @@ class CassandraSingleton:
 
     def execute_query(self, query, values=None):
         return self.session.execute(query, values)
-    
-    def insert_data(self, table : str, data : map) -> None:
-        query = f"INSERT INTO {table} ("
-
-        columns = ", ".join(data.keys())
-        values = ", ".join([f"'{value}'" for value in data.values()])
-        query += f"{columns}) VALUES ({values});"
-        
-        self.execute_query(query)
