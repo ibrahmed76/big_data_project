@@ -1,18 +1,28 @@
-import redis
+from redis_db import RedisSingleton
 import json
 
 class PlayerStatistics:
-    def __init__(self, host='localhost', port=6379, db=0):
-        self.client = redis.Redis(host=host, port=port, db=db)
-
+        
+    @staticmethod
     def set_player_stat(self, player_id, stat_category, stat_name, value):
+        redis = RedisSingleton()
         key = f"player:{player_id}:stats"
-        self.client.hset(key, f"{stat_category}:{stat_name}", value)
+        field = f"{stat_category}:{stat_name}"
+        
+        return redis.set_with_field(key, field, value)
 
+    @staticmethod
     def get_player_stat(self, player_id, stat_category, stat_name):
+        redis = RedisSingleton()
         key = f"player:{player_id}:stats"
-        return self.client.hget(key, f"{stat_category}:{stat_name}")
+        field = f"{stat_category}:{stat_name}"
+        
+        return redis.get_with_field(key, field)
+        
 
+    @staticmethod
     def get_all_player_stats(self, player_id):
+        redis = RedisSingleton()
         key = f"player:{player_id}:stats"
-        return self.client.hgetall(key)
+        
+        return redis.get_all(key)
