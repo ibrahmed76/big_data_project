@@ -7,7 +7,7 @@ import uuid
 
 # Establish connection to cassandra
 cluster = Cluster(['127.0.0.1'], port=9042)
-session = cluster.connect()
+session = cluster.connect('userspace')
 
 # Establish connection to Redis
 r = redis.Redis(
