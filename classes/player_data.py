@@ -70,4 +70,5 @@ if __name__ == '__main__':
     db.register(player_name, email, password, achievements, inventory, friend_list)
     #test with wrong pass 
     db.login(email,"ndnnd")
+    #test with right pass
     db.login(email,password)
