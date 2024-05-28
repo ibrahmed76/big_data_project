@@ -7,7 +7,7 @@ import uuid
 
 # Establish connection to cassandra
 cluster = Cluster(['127.0.0.1'], port=9042)
-session = cluster.connect('userspace')
+session = cluster.connect()
 
 # Establish connection to Redis
 r = redis.Redis(
@@ -26,11 +26,24 @@ def earn(player_id, amount):
 
 
 #check if cassandra is working
-def checkWorking():
+def checkWorking(player_name):
     session.execute("USE game;")
-    rows = session.execute("SELECT * FROM player_profiles")
-    for row in rows:
-        print(row)
+    query = """SELECT player_name
+               FROM player_profiles
+               WHERE player_name = %s
+               ALLOW FILTERING"""
+    result = session.execute(query, (player_name,))
+    
+    # Check if the result contains any rows
+    if result:
+        # Fetch the first row from the result
+        row = result.one()
+        if row:
+            print(f'{player_name} added')
+        else:
+            print('error')
+    else:
+        print('error')
 
 def register(player_name, level, experience_points, achievements, inventory):
     session.execute("USE game;")
@@ -38,6 +51,10 @@ def register(player_name, level, experience_points, achievements, inventory):
         INSERT INTO player_profiles (player_id, player_name, level, experience_points, achievements, inventory)
         VALUES (%s, %s, %s, %s, %s, %s);""",
         (uuid.uuid4(), player_name, level, experience_points, achievements, inventory))
+    checkWorking('ibra')
+
+# def login(player_name):
+
 
 # Example function call to push a transaction
 # earn(2, 30000)
@@ -49,7 +66,6 @@ def register(player_name, level, experience_points, achievements, inventory):
 #     print(f"Transaction - Timestamp: {transaction_data['timestamp']}, Amount: {transaction_data['delta']}")
 
 
-register("joe",100,2000,['First Kill', 'Treasure Hunter'], ['Sword', 'Shield', 'Potion'])
-checkWorking()
+register("ibra",100,2000,['First Kill', 'Treasure Hunter'], ['Sword', 'Shield', 'Potion'])
 
 cluster.shutdown()
