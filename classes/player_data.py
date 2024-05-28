@@ -1,7 +1,6 @@
 import uuid
 from cassandra_db import CassandraSingleton
 
-
 class PlayerData:
     def __init__(self):
         self._cassandra = CassandraSingleton()
