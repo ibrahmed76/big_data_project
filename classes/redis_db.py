@@ -3,11 +3,11 @@ import redis
 class RedisSingleton:
     _instance = None
 
-    def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-            cls._instance.connect()
-        return cls._instance
+    def __new__(self):
+        if self._instance is None:
+            self._instance = super().__new__(self)
+            self._instance.connect()
+        return self._instance
 
     def connect(self):
         self.redis_client = redis.Redis(host='localhost', port='6379', 
