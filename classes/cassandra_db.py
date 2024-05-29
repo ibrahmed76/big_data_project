@@ -15,3 +15,6 @@ class CassandraSingleton:
 
     def execute_query(self, query, values=None):
         return self.session.execute(query, values)
+    
+    def close(self):
+        self._instance.close()

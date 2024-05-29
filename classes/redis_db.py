@@ -28,4 +28,7 @@ class RedisSingleton:
     def get_all(self, key):
         return self.redis_client.hgetall(key)
     
+    def close(self):
+        self._instance.close()
+    
     
