@@ -53,15 +53,15 @@ class GameStateData:
         return resource
     
 
-
-if __name__ == "__main__":
-    redis = RedisSingleton()
-    # GameStateData.add_game_event('game2', 'enemy_defeat', 'player123', item_id='item78', enemy_id='enemy2')
-    # GameStateData.set_player_location(124, 50, 60)
-    # print(GameStateData.get_player_location(124))
-    # print(GameStateData.get_game_events('game2'))
-    # GameStateData.set_resource_availability('game101', 'resource', 10, 20, 30)
-    print(GameStateData.get_resource_availability('game101', 'resource'))
+#testing
+# if __name__ == "__main__":
+#     redis = RedisSingleton()
+#     GameStateData.add_game_event('game2', 'enemy_defeat', 'player123', item_id='item78', enemy_id='enemy2')
+#     GameStateData.set_player_location(124, 50, 60)
+#     print(GameStateData.get_player_location(124))
+#     print(GameStateData.get_game_events('game2'))
+#     GameStateData.set_resource_availability('game101', 'resource', 10, 20, 30)
+#     print(GameStateData.get_resource_availability('game101', 'resource'))
 
     
     

@@ -14,6 +14,7 @@ class LeaderboardData:
         """
         cassndra.execute_query(query, (uuid.UUID(leaderboard_id), metric, uuid.UUID(player_id), score, timestamp))
 
+    @staticmethod
     def get_leaderboard(leaderboard_id, metric, limit=10):
         cassandra = CassandraSingleton()
         query = """
@@ -23,10 +24,11 @@ class LeaderboardData:
         """
         rows = cassandra.execute_query(query, (uuid.UUID(leaderboard_id), metric, limit))
         return list(rows)
-    
-if __name__ == '__main__':
-    player_id = str(uuid.uuid4())
-    leaderboard_id = str(uuid.uuid4())
-    LeaderboardData.add_score(leaderboard_id, 'points', player_id, 1500)
-    print(LeaderboardData.get_leaderboard(leaderboard_id,'points'))
 
+
+#testing   
+# if __name__ == '__main__':
+#     player_id = str(uuid.uuid4())
+#     leaderboard_id = str(uuid.uuid4())
+#     LeaderboardData.add_score(leaderboard_id, 'points', player_id, 1500)
+#     print(LeaderboardData.get_leaderboard(leaderboard_id,'points'))
