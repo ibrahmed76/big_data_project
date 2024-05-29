@@ -1,6 +1,6 @@
-from redis_db import RedisSingleton
-import json
 import time
+import json
+from redis_db import RedisSingleton
 
 class GameStateData:
     @staticmethod
@@ -26,37 +26,43 @@ class GameStateData:
             "enemy_id": enemy_id,
             "timestamp": int(time.time())
         }
-        redis.set(f"game:{game_id}:events", f"'{event}'")
+
+        event_json = json.dumps(event)
+        redis.push_json(f"game:{game_id}:events", event_json)
     
     @staticmethod
     def get_game_events(game_id):
         redis = RedisSingleton()
-        events = redis.get(f"game:{game_id}:events")
-        return [json.loads(event) for event in events]
+        events = redis.get_all_pushed(f"game:{game_id}:events")
+        return events
 
     @staticmethod
-    def set_resource_availability(self, game_id, resource_id, quantity, x, y):
+    def set_resource_availability(game_id, resource_id, quantity, x, y):
         redis = RedisSingleton()
         resource = {
             "quantity": quantity,
             "location": {"x": x, "y": y},
             "timestamp": int(time.time())
         }
-        redis.hset(f"game:{game_id}:resources", resource_id, json.dumps(resource))
+        redis.set_with_field(f"game:{game_id}:resources", f'{resource_id}', f"'{json.dumps(resource)}'")
 
     @staticmethod
     def get_resource_availability(game_id, resource_id):
         redis = RedisSingleton()
-        resource = redis.hget(f"game:{game_id}:resources", resource_id)
-        return json.loads(resource) if resource else None
+        resource = redis.get_with_field(f"game:{game_id}:resources", f'{resource_id}')
+        return resource
     
 
 
 if __name__ == "__main__":
     redis = RedisSingleton()
-    GameStateData.add_game_event('game123', 'item_pickup', 'player123', item_id='item789')
+    # GameStateData.add_game_event('game2', 'enemy_defeat', 'player123', item_id='item78', enemy_id='enemy2')
     # GameStateData.set_player_location(124, 50, 60)
     # print(GameStateData.get_player_location(124))
-    print(GameStateData.get_game_events('game123'))
+    # print(GameStateData.get_game_events('game2'))
+    # GameStateData.set_resource_availability('game101', 'resource', 10, 20, 30)
+    print(GameStateData.get_resource_availability('game101', 'resource'))
+
+    
     
     

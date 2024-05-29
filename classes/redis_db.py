@@ -1,4 +1,6 @@
+import json
 import redis
+
 
 class RedisSingleton:
     _instance = None
@@ -27,6 +29,12 @@ class RedisSingleton:
     
     def get_all(self, key):
         return self.redis_client.hgetall(key)
+
+    def push_json(self, key, json_dict):
+        self.redis_client.lpush(key, json_dict)
+    
+    def get_all_pushed(self, key):
+        return self.redis_client.lrange(key, 0, -1)
     
     def close(self):
         self._instance.close()
