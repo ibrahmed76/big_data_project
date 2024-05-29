@@ -24,3 +24,7 @@ class GameAnalytics:
         cassandra = CassandraSingleton()
         query = f"SELECT timestamp, event_data FROM game_analytics WHERE event_type='{event_type}' AND timestamp >= '{start_time}' AND timestamp <= '{end_time}'"
         return cassandra.execute_query(query)
+
+
+if __name__ in "__main__":
+    GameAnalytics.add_event('player_behaviour', '2021-06-01T00:00:00Z', '{"player_id": 12345, "action": "jump", "location": "x:100, y:200"}')
